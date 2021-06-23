@@ -17,6 +17,9 @@ $ docker images --help
 $ docker images -a
 $ docker images -a -q
 
+delete all stop
+$ docker system prune -a
+
 Crear y ejecuta un contenedor nuevo en forma iteractiva
 $ docker run -it ubuntu
 root@0617fe109b46:/# uname -a
@@ -603,3 +606,78 @@ mysql> show databases;
 4 rows in set (0.00 sec)
 
 mysql> 
+
+
+
+
+56. Conceptos de volúmenes
+$ cd /var/lib/docker
+$ sudo -s
+$ ls -lt
+total 44
+drwx------ 2 root root 4096 Jun 23 18:30 tmp
+drwx-----x 3 root root 4096 Jun 23 18:30 overlay2
+drwx-----x 2 root root 4096 Jun 23 18:30 volumes
+drwx------ 2 root root 4096 Jun 23 18:30 runtimes
+drwx--x--x 4 root root 4096 Jun 21 11:04 buildkit
+drwx------ 2 root root 4096 Jun 21 11:04 swarm
+drwxr-x--- 3 root root 4096 Jun 21 11:04 network
+drwx------ 2 root root 4096 Jun 21 11:04 trust
+drwx------ 3 root root 4096 Jun 21 11:04 image
+drwx------ 4 root root 4096 Jun 21 11:03 plugins
+drwx-----x 2 root root 4096 Jun 21 11:03 containers
+
+$ pwd
+/var/lib/docker/volumes
+
+Crear un contenedor con un volumen almacenado en la carpeta /datos
+$ docker run -it -v /datos --name ubuntu1 ubuntu bash
+root@1cf7b7feb2d0:/# ls -lt
+drwxr-xr-x   5 root root  360 Jun 23 20:23 dev
+dr-xr-xr-x  13 root root    0 Jun 23 20:23 sys
+dr-xr-xr-x 185 root root    0 Jun 23 20:23 proc
+drwxr-xr-x   2 root root 4096 Jun 23 20:23 datos
+drwxr-xr-x   1 root root 4096 Jun 23 20:23 etc
+
+
+:/var/lib/docker/volumes $ ls -lt
+total 28
+drwx-----x 3 root root   4096 Jun 23 20:23 446f64611961e9eeba22929c20a29449cabb91a06349f08c199df3d7780e2f69
+-rw------- 1 root root  32768 Jun 23 20:23 metadata.db
+brw------- 1 root root 202, 1 Jun 23 18:30 backingFsBlockDev
+
+
+
+:/var/lib/docker/volumes/446f64611961e9eeba22929c20a29449cabb91a06349f08c199df3d7780e2f69/_data $ ls
+
+root@1cf7b7feb2d0:/datos# touch miFile.txt
+root@1cf7b7feb2d0:/datos# echo "Hola" > miFile.txt 
+root@1cf7b7feb2d0:/datos# cat miFile.txt 
+Hola
+
+:/var/lib/docker/volumes/446f64611961e9eeba22929c20a29449cabb91a06349f08c199df3d7780e2f69/_data $ ls
+miFile.txt
+
+--------------------
+
+root@1cf7b7feb2d0:/datos# exit
+exit
+:~/environment $ docker ps
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+
+:/var/lib/docker/volumes/446f64611961e9eeba22929c20a29449cabb91a06349f08c199df3d7780e2f69/_data $ ls
+miFile.txt
+
+-----------------------------------------------------
+
+:~/environment $ docker start -i ubuntu1
+root@1cf7b7feb2d0:/# cd datos
+root@1cf7b7feb2d0:/datos# ls
+miFile.txt
+root@1cf7b7feb2d0:/datos# 
+
+
+
+
+
+
