@@ -611,6 +611,7 @@ mysql>
 
 
 56. Conceptos de volúmenes
+57. Crear un volumen en un contenedor
 $ cd /var/lib/docker
 $ sudo -s
 $ ls -lt
@@ -679,5 +680,26 @@ root@1cf7b7feb2d0:/datos#
 
 
 
+58. Visualizar información de volúmenes
+
+$ docker volume ls
+DRIVER    VOLUME NAME
+local     446f64611961e9eeba22929c20a29449cabb91a06349f08c199df3d7780e2f69
+
+$ docker volume inspect 446f64611961e9eeba22929c20a29449cabb91a06349f08c199df3d7780e2f69
+[
+    {
+        "CreatedAt": "2021-06-23T20:47:09Z",
+        "Driver": "local",
+        "Labels": null,
+        "Mountpoint": "/var/lib/docker/volumes/446f64611961e9eeba22929c20a29449cabb91a06349f08c199df3d7780e2f69/_data",
+        "Name": "446f64611961e9eeba22929c20a29449cabb91a06349f08c199df3d7780e2f69",
+        "Options": null,
+        "Scope": "local"
+    }
+]
+
+
+60. Crear un directorio compartido con el host
 
 
