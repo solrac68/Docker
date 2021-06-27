@@ -701,5 +701,19 @@ $ docker volume inspect 446f64611961e9eeba22929c20a29449cabb91a06349f08c199df3d7
 
 
 60. Crear un directorio compartido con el host
+$ docker run -it -v /home/ubuntu/environment/dir1:/dir1 --name ubuntu2 ubuntu
+root@ee059a6b13d5:/dir1# 
+root@ee059a6b13d5:/dir1# touch f1
+
+carlos:~/environment/dir1 (main) $ ls
+f1
+
+carlos:~/environment/dir1 (main) $ touch f2fromhost
+root@ee059a6b13d5:/dir1# ls
+f1  f2fromhost
 
 
+61. Compartir volúmenes entre contenedores
+
+Se crea el contenedor ubuntu5 y utiliza el mismo volumen que ubuntu4
+$ docker run -it --name ubuntu5 --volumes-from ubuntu4 ubuntu bash
