@@ -717,3 +717,60 @@ f1  f2fromhost
 
 Se crea el contenedor ubuntu5 y utiliza el mismo volumen que ubuntu4
 $ docker run -it --name ubuntu5 --volumes-from ubuntu4 ubuntu bash
+
+
+
+
+63. Crear un volumen independiente
+
+:/var/lib/docker/volumes $ docker volume create vol1
+vol1
+:/var/lib/docker/volumes $ ls
+backingFsBlockDev  metadata.db  vol1
+
+:/var/lib/docker/volumes $ docker volume inspect vol1
+[
+    {
+        "CreatedAt": "2021-06-29T18:59:50Z",
+        "Driver": "local",
+        "Labels": {},
+        "Mountpoint": "/var/lib/docker/volumes/vol1/_data",
+        "Name": "vol1",
+        "Options": {},
+        "Scope": "local"
+    }
+]
+
+:/var/lib/docker/volumes $ docker run -it --name ubuntu7 -v vol1:/dir1 ubuntu bash
+root@c82b88699794:/# ls
+bin  boot  dev  dir1  etc  home  lib  lib32  lib64  libx32  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+root@c82b88699794:/# cd dir1
+root@c82b88699794:/dir1# touch f1
+
+carlos:~/environment (main) $ cd /var/lib/docker/volumes
+carlos:/var/lib/docker/volumes $ sudo -s
+:/var/lib/docker/volumes $ ls
+backingFsBlockDev  metadata.db  vol1
+:/var/lib/docker/volumes/vol1/_data $ ls
+f1
+
+
+El mismo volumne puede ser compartido con otro contenedor
+carlos:~/environment (main) $ docker run -it --name ubuntu8 -v vol1:/dir1 ubuntu bash
+root@254e710dda6b:/# cd dir1/
+root@254e710dda6b:/dir1# ls
+f1
+root@254e710dda6b:/dir1# touch f2.txt
+
+Compartiendo el mismo volumen, la carpeta datos es de solo lectura.
+carlos:~/environment (main) $ docker run -it --name ubuntu9 -v vol1:/datos:ro ubuntu bash
+
+
+64. Borrar un volumen
+carlos:~/environment (main) $ docker volume rm vol1
+Error response from daemon: remove vol1: volume is in use - [c82b88699794398987a857ee62c4f42dd5bd150278b781599f0f9202d30ed1e9, 254e710dda6b95f2cf1b7253c7ca30c4ecf6a2db9c405b896d1233b69da3e4a6]
+
+Elimina volumenes sin usar
+carlos:~/environment (main) $ docker volume prune
+
+
