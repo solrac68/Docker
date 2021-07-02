@@ -807,8 +807,45 @@ A /usr/share/doc/libssl1.1/changelog.Debian.gz
 A /usr/share/doc/libssl1.1/copyright
 
 
+68. Docker commit. Crear una imagen manualmente
+carlos:~/environment (main) $ docker commit ubuntu1 mi_ubuntu                                                                                                                                           
+sha256:3587aedb13bcee1cc29bd1bfb5293f2ad7a29fedfc36b03f7e9681374a748953
+
+carlos:~/environment (main) $ docker images
+REPOSITORY   TAG       IMAGE ID       CREATED          SIZE
+mi_ubuntu    latest    3587aedb13bc   28 seconds ago   110MB
+ubuntu       latest    9873176a8ff5   2 weeks ago      72.7MB
+
+carlos:~/environment (main) $ docker run -it mi_ubuntu bash
+root@670298ad049c:/# wget
+wget: missing URL
+Usage: wget [OPTION]... [URL]...
+
+Try `wget --help' for more options.
+root@670298ad049c:/# 
 
 
+69. Dockerfile
+70. Crear una imagen de un Dockerfile
+
+# Archivo Dockefile dentro de la carpeta ~/environment/Docker/imagen_python
+# Cargue de la imagen inicial
+FROM ubuntu
+RUN apt-get update
+RUN apt-get install -y python
+
+# Se ejecutan las instrucciones del archivo Dockerfile
+carlos:~/environment/Docker/imagen_python (main) $ docker build -t imagen_python .
 
 
+carlos:~/environment/Docker/imagen_python (main) $ docker images
+REPOSITORY      TAG       IMAGE ID       CREATED          SIZE
+imagen_python   latest    e872741f236e   4 minutes ago    138MB
+mi_ubuntu       latest    3587aedb13bc   35 minutes ago   110MB
+ubuntu          latest    9873176a8ff5   2 weeks ago      72.7MB
 
+carlos:~/environment/Docker/imagen_python (main) $ docker run -it imagen_python python
+Python 2.7.18 (default, Mar  8 2021, 13:02:45) 
+[GCC 9.3.0] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>> 
