@@ -774,4 +774,41 @@ Elimina volumenes sin usar
 carlos:~/environment (main) $ docker volume prune
 
 
+67. Modificar un contenedor
+$ docker run -it --name ubuntu1 ubuntu bash
+root@e63a005cde07:/# apt-get update
+root@e63a005cde07:/# apt-get install wget
+carlos:~/environment (main) $ docker ps -a
+CONTAINER ID   IMAGE     COMMAND   CREATED         STATUS                      PORTS     NAMES
+e63a005cde07   ubuntu    "bash"    7 minutes ago   Exited (0) 14 seconds ago             ubuntu1
+
+
+carlos:~/environment (main) $ docker start -i ubuntu1
+root@e63a005cde07:/# wget
+wget: missing URL
+Usage: wget [OPTION]... [URL]...
+
+Try `wget --help' for more options.
+
+#Dice los cambios que ha tenido este contenedor
+carlos:~/environment (main) $ docker diff ubuntu1
+C /root
+A /root/.bash_history
+A /index.html
+A /index.html.1
+C /usr
+C /usr/local
+C /usr/local/share
+A /usr/local/share/ca-certificates
+C /usr/share
+C /usr/share/doc
+A /usr/share/doc/libssl1.1
+A /usr/share/doc/libssl1.1/changelog.Debian.gz
+A /usr/share/doc/libssl1.1/copyright
+
+
+
+
+
+
 
