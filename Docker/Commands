@@ -890,3 +890,149 @@ usage: git [--version] [--help] [-C <path>] [-c <name>=<value>]
            [-p | --paginate | -P | --no-pager] [--no-replace-objects] [--bare]
            [--git-dir=<path>] [--work-tree=<path>] [--namespace=<name>]
            <command> [<args>]
+
+
+
+72. CMD
+
+# Dockerfile
+FROM ubuntu
+RUN apt-get update
+RUN apt-get install -y python
+RUN echo 1.0 >> /etc/version && apt-get install -y git \
+    && apt-get install -y iputils-ping
+CMD echo "Welcome to this container"
+
+carlos:~/environment/Docker/imagen_python (main) $ docker build -t image:v1 .
+
+carlos:~/environment/Docker/imagen_python (main) $  docker images
+REPOSITORY      TAG       IMAGE ID       CREATED          SIZE
+image           v1        95023b47cd91   24 seconds ago   235MB
+imagen_python   v1        801f7994a98f   21 hours ago     235MB
+imagen_python   latest    e872741f236e   7 days ago       138MB
+mi_ubuntu       latest    3587aedb13bc   7 days ago       110MB
+ubuntu          latest    9873176a8ff5   3 weeks ago      72.7MB
+
+carlos:~/environment/Docker/imagen_python (main) $ docker run -it --rm image:v1                                                                                                                         
+Welcome to this container
+
+carlos:~/environment/Docker/imagen_python (main) $ docker rmi image:v1
+Untagged: image:v1
+Deleted: sha256:95023b47cd918f3b9d1a62ae5345664fa9a249b5475ec78cbf3561d33638a2a7
+
+------
+
+# Dockerfile
+FROM ubuntu
+RUN apt-get update
+RUN apt-get install -y python
+RUN echo 1.0 >> /etc/version && apt-get install -y git \
+    && apt-get install -y iputils-ping
+CMD ["echo","Welcome to this container"]
+
+
+carlos:~/environment/Docker/imagen_python (main) $ docker build -t image:v1 .
+carlos:~/environment/Docker/imagen_python (main) $ docker run -it --rm image:v1                                                                                                                         
+Welcome to this container
+
+carlos:~/environment/Docker/imagen_python (main) $ docker image history image:v1
+IMAGE          CREATED         CREATED BY                                      SIZE      COMMENT
+95d14947c473   3 minutes ago   /bin/sh -c #(nop)  CMD ["echo" "Welcome to t…   0B        
+801f7994a98f   21 hours ago    /bin/sh -c echo 1.0 >> /etc/version && apt-g…   96.6MB    
+e872741f236e   7 days ago      /bin/sh -c apt-get install -y python            36.4MB    
+22d14bd65edf   7 days ago      /bin/sh -c apt-get update                       29.3MB    
+9873176a8ff5   3 weeks ago     /bin/sh -c #(nop)  CMD ["bash"]                 0B        
+<missing>      3 weeks ago     /bin/sh -c #(nop) ADD file:920cf788d1ba88f76…   72.7MB  
+
+
+
+# Dockerfile
+FROM ubuntu
+RUN apt-get update
+RUN apt-get install -y python
+RUN echo 1.0 >> /etc/version && apt-get install -y git \
+    && apt-get install -y iputils-ping
+CMD /bin/bash
+
+carlos:~/environment/Docker/imagen_python (main) $ docker build -t image:v1 . 
+carlos:~/environment/Docker/imagen_python (main) $ docker run -it --rm image:v1
+root@8b4a0866a8de:/# 
+
+carlos:~/environment/Docker/imagen_python (main) $ docker image history image:v1
+IMAGE          CREATED         CREATED BY                                      SIZE      COMMENT
+f977cfbe0722   2 minutes ago   /bin/sh -c #(nop)  CMD ["/bin/sh" "-c" "/bin…   0B        
+801f7994a98f   22 hours ago    /bin/sh -c echo 1.0 >> /etc/version && apt-g…   96.6MB    
+e872741f236e   7 days ago      /bin/sh -c apt-get install -y python            36.4MB    
+22d14bd65edf   7 days ago      /bin/sh -c apt-get update                       29.3MB    
+9873176a8ff5   3 weeks ago     /bin/sh -c #(nop)  CMD ["bash"]                 0B        
+<missing>      3 weeks ago     /bin/sh -c #(nop) ADD file:920cf788d1ba88f76…   72.7MB  
+
+
+
+# Dockerfile
+FROM ubuntu
+RUN apt-get update
+RUN apt-get install -y python
+RUN echo 1.0 >> /etc/version && apt-get install -y git \
+    && apt-get install -y iputils-ping
+CMD ["/bin/bash"]
+
+carlos:~/environment/Docker/imagen_python (main) $ docker build -t image:v1 . 
+carlos:~/environment/Docker/imagen_python (main) $ docker run -it --rm image:v1
+root@8b4a0866a8de:/# 
+
+carlos:~/environment/Docker/imagen_python (main) $ docker image history image:v1                                                                                                                        
+IMAGE          CREATED          CREATED BY                                      SIZE      COMMENT
+e04f77470b66   20 seconds ago   /bin/sh -c #(nop)  CMD ["/bin/bash"]            0B        
+801f7994a98f   22 hours ago     /bin/sh -c echo 1.0 >> /etc/version && apt-g…   96.6MB    
+e872741f236e   7 days ago       /bin/sh -c apt-get install -y python            36.4MB    
+22d14bd65edf   7 days ago       /bin/sh -c apt-get update                       29.3MB    
+9873176a8ff5   3 weeks ago      /bin/sh -c #(nop)  CMD ["bash"]                 0B        
+<missing>      3 weeks ago      /bin/sh -c #(nop) ADD file:920cf788d1ba88f76…   72.7MB
+
+
+73. ENTRYPOINT
+
+# Dockerfile
+FROM ubuntu
+RUN apt-get update
+RUN apt-get install -y python
+RUN echo 1.0 >> /etc/version && apt-get install -y git \
+    && apt-get install -y iputils-ping
+ENTRYPOINT ["/bin/bash"]
+
+carlos:~/environment/Docker/imagen_python (main) $ docker build -t image:v1 .
+carlos:~/environment/Docker/imagen_python (main) $ docker run -it --rm image:v1 df -h
+/usr/bin/df: /usr/bin/df: cannot execute binary file
+
+carlos:~/environment/Docker/imagen_python (main) $ docker run -it --rm image:v1
+root@e05d77184bb3:/# 
+
+
+# Dockerfile
+FROM ubuntu
+RUN apt-get update
+RUN apt-get install -y python
+RUN echo 1.0 >> /etc/version && apt-get install -y git \
+    && apt-get install -y iputils-ping
+ENTRYPOINT ["df"]
+
+carlos:~/environment/Docker/imagen_python (main) $ docker build -t image:v1 .
+
+carlos:~/environment/Docker/imagen_python (main) $ docker run -it --rm image:v1 -h                                                                                                                      
+Filesystem      Size  Used Avail Use% Mounted on
+overlay          30G  6.5G   23G  23% /
+tmpfs            64M     0   64M   0% /dev
+tmpfs           490M     0  490M   0% /sys/fs/cgroup
+shm              64M     0   64M   0% /dev/shm
+/dev/xvda1       30G  6.5G   23G  23% /etc/hosts
+tmpfs           490M     0  490M   0% /proc/acpi
+tmpfs           490M     0  490M   0% /proc/scsi
+tmpfs           490M     0  490M   0% /sys/firmware
+
+
+
+
+
+
+
