@@ -1031,6 +1031,102 @@ tmpfs           490M     0  490M   0% /proc/scsi
 tmpfs           490M     0  490M   0% /sys/firmware
 
 
+74. WORKDIR
+
+# Dockerfile
+FROM ubuntu
+RUN apt-get update
+RUN apt-get install -y python
+RUN echo 1.0 >> /etc/version && apt-get install -y git \
+    && apt-get install -y iputils-ping
+RUN mkdir /datos
+WORKDIR /datos
+RUN touch f1.txt
+RUN mkdir /dato1
+WORKDIR /datos1
+RUN touch f2.txt
+ENTRYPOINT ["/bin/bash"]
+
+carlos:~/environment/Docker/imagen_python (main) $ docker build -t image:v3 .
+carlos:~/environment/Docker/imagen_python (main) $ docker run -it --rm image:v3
+root@6f6b5a7c91e0:/datos1# 
+
+75. COPY-ADD
+
+# Dockerfile
+FROM ubuntu
+RUN apt-get update
+RUN apt-get install -y python
+RUN echo 1.0 >> /etc/version && apt-get install -y git \
+    && apt-get install -y iputils-ping
+
+##WORDIR##
+RUN mkdir /datos
+WORKDIR /datos
+RUN touch f1.txt
+RUN mkdir /dato1
+WORKDIR /datos1
+RUN touch f2.txt
+ENTRYPOINT ["/bin/bash"]
+
+##COPY##
+COPY index.html .
+COPY app.log /datos
+
+##ENTRYPOINT##
+ENTRYPOINT ["/bin/bash"]
+
+carlos:~/environment/Docker/imagen_python (main) $ docker build -t image:v4 .
+carlos:~/environment/Docker/imagen_python (main) $ docker run -it --rm image:v4
+
+carlos:~/environment/Docker/imagen_python (main) $ docker run -it --rm image:v4
+root@532936181c4c:/datos1# ls
+f2.txt  index.html
+root@532936181c4c:/datos1# 
+
+
+
+tar cvf f.tar f1 f2 f3 f4 f5
+
+# Dockerfile
+FROM ubuntu
+RUN apt-get update
+RUN apt-get install -y python
+RUN echo 1.0 >> /etc/version && apt-get install -y git \
+    && apt-get install -y iputils-ping
+
+##WORDIR##
+RUN mkdir /datos
+WORKDIR /datos
+RUN touch f1.txt
+RUN mkdir /dato1
+WORKDIR /datos1
+RUN touch f2.txt
+ENTRYPOINT ["/bin/bash"]
+
+##COPY##
+COPY index.html .
+COPY app.log /datos
+
+##ADD##
+ADD docs docs
+ADD f* /datos/
+
+# Copia el contenido de f.tar (desempaqueta) al directorio por defecto, /datos1
+ADD f.tar .
+
+##ENTRYPOINT##
+ENTRYPOINT ["/bin/bash"]
+
+carlos:~/environment/Docker/imagen_python (main) $ docker build -t image:v5 .
+
+carlos:~/environment/Docker/imagen_python (main) $ docker run -it --rm image:v5
+root@f6a68068c9ce:/datos1# ls
+docs  f1  f2  f2.txt  f3  f4  f5  index.html
+root@f6a68068c9ce:/datos1# cd /datos
+root@f6a68068c9ce:/datos# ls
+app.log  f1  f1.txt  f2  f3  f4  f5
+
 
 
 

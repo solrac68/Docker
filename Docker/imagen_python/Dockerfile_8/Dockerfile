@@ -18,12 +18,5 @@ ENTRYPOINT ["/bin/bash"]
 COPY index.html .
 COPY app.log /datos
 
-##ADD##
-ADD docs docs
-ADD f* /datos/
-
-# Copia el contenido de f.tar (desempaqueta) al directorio por defecto, /datos1
-ADD f.tar .
-
 ##ENTRYPOINT##
 ENTRYPOINT ["/bin/bash"]
