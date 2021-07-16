@@ -34,12 +34,3 @@ RUN mkdir $dir && mkdir $dir1
 
 
 
-##ARG##
-ARG dir2
-RUN mkdir $dir2
-ARG user
-ENV user_docker $user
-ADD add_user.sh /datos1
-RUN /datos1/add_user.sh
-
-
