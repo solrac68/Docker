@@ -25,8 +25,7 @@ ADD f* /datos/
 # Copia el contenido de f.tar (desempaqueta) al directorio por defecto, /datos1
 ADD f.tar .
 
-##ENTRYPOINT##
-ENTRYPOINT ["/bin/bash"]
+
 
 ##ENV##
 ENV dir=/data dir1=/data1
@@ -35,11 +34,27 @@ RUN mkdir $dir && mkdir $dir1
 
 
 ##ARG##
-ARG dir2
-RUN mkdir $dir2
-ARG user
-ENV user_docker $user
-ADD add_user.sh /datos1
-RUN /datos1/add_user.sh
+# ARG dir2
+# RUN mkdir $dir2
+# ARG user
+# ENV user_docker $user
+# ADD add_user.sh /datos1
+# RUN /datos1/add_user.sh
+
+##EXPOSE##
+RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install tzdata
+RUN apt-get install -y apache2
+EXPOSE 80
+ADD entrypoint.sh /datos1
+
+##CMD##
+#CMD /datos1/entrypoint.sh
+
+
+
+##ENTRYPOINT##
+ENTRYPOINT ["/bin/bash"]
+
+
 
 
