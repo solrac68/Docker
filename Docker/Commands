@@ -1330,6 +1330,20 @@ nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
 _apt:x:100:65534::/nonexistent:/usr/sbin/nologin
 augusto:x:1000:1000:,,,:/home/augusto:/bin/bash
 
+83. Subir imágenes a Docker Hub
+docker login
+username: solrac2013
+pass: Colombia2020
+
+➜  imagen_python git:(main) docker image tag image:v10 solrac2013/image:v10
+➜  imagen_python git:(main) docker push solrac2013/image:v10
+➜  imagen_python git:(main) docker image tag image:v10 solrac2013/image:latest
+➜  imagen_python git:(main) docker push solrac2013/image:latest
+➜  imagen_python git:(main) docker rmi `docker images -q`
+➜  imagen_python git:(main) docker pull solrac2013/image
+
+
+
 
 
 
