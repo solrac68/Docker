@@ -1343,6 +1343,11 @@ pass: Colombia2020
 ➜  imagen_python git:(main) docker pull solrac2013/image
 
 
+84. Integración continua. Ejemplo: Conectar DockerHub y GIthub de forma automática
+
+
+
+
 
 
 
