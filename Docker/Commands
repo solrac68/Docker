@@ -1344,10 +1344,80 @@ pass: Colombia2020
 
 
 84. Integración continua. Ejemplo: Conectar DockerHub y GIthub de forma automática
+89. Mi primer proyecto Compose
+
+➜  pr_nginx git:(main) docker-compose up
+
+➜  Docker git:(main) ✗ docker ps
+CONTAINER ID   IMAGE     COMMAND                  CREATED         STATUS         PORTS                               NAMES
+b2e6e223e60d   nginx     "/docker-entrypoint.…"   2 minutes ago   Up 2 minutes   0.0.0.0:80->80/tcp, :::80->80/tcp   pr_nginx_nginx_1
+
+➜  Docker git:(main) ✗ docker network ls
+NETWORK ID     NAME                     DRIVER    SCOPE
+d3f56bf79207   bridge                   bridge    local
+509cd1aa83d6   host                     host      local
+df7eae2aff3a   none                     null      local
+eb04a41bfd90   pr_nginx_default         bridge    local
+68190791f065   recipe-app-api_default   bridge    local
+0375276f6012   red2                     bridge    local
 
 
+pr_nginx git:(main) ✗ docker inspect network pr_nginx_default
 
+[
+    {
+        "Name": "pr_nginx_default",
+        "Id": "eb04a41bfd90615a052059a43dba92aa641894727ddf38d78cb5d99cef4c9239",
+        "Created": "2021-08-20T15:53:17.131964858-05:00",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": null,
+            "Config": [
+                {
+                    "Subnet": "172.19.0.0/16",
+                    "Gateway": "172.19.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": true,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Containers": {
+            "b2e6e223e60d98269071cec746c8b404dd5784ec0d41f2c0e997d72c4e4be92f": {
+                "Name": "pr_nginx_nginx_1",
+                "EndpointID": "d4b2516de7f7647477407a2cccb4cd6b0ea7eccd3417378f0b37b438169a3d35",
+                "MacAddress": "02:42:ac:13:00:02",
+                "IPv4Address": "172.19.0.2/16",
+                "IPv6Address": ""
+            }
+        },
+        "Options": {},
+        "Labels": {
+            "com.docker.compose.network": "default",
+            "com.docker.compose.project": "pr_nginx",
+            "com.docker.compose.version": "1.26.0"
+        }
+    }
+]
 
+➜  pr_nginx git:(main) ✗ docker-compose ps
+      Name                    Command               State                Ports              
+--------------------------------------------------------------------------------------------
+pr_nginx_nginx_1   /docker-entrypoint.sh ngin ...   Up      0.0.0.0:80->80/tcp,:::80->80/tcp
+
+# Despues de pararlo
+
+➜  pr_nginx git:(main) ✗ docker-compose ps
+      Name                    Command               State    Ports
+------------------------------------------------------------------
+pr_nginx_nginx_1   /docker-entrypoint.sh ngin ...   Exit 0
 
 
 
