@@ -1,22 +1,28 @@
 version: '3'
 services:
   wordpress:
-     image: wordpress
-     environment:
-      WORDPRESS_DB_HOST: dbserver:3306
-      WORDPRESS_DB_USER: wordpress
-      WORDPRESS_DB_PASSWORD: mysqlpw
+    image: wordpress:latest
+    container_name: wordpress-blog
+    depends_on:
+      - mysql
+    ports:
+      - "8000:80"
+      - "443:443"
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: mysql
+      WORDPRESS_DB_USER: admin
+      WORDPRESS_DB_PASSWORD: password
       WORDPRESS_DB_NAME: wordpress
-     ports:
-      - 80:80
-     depends_on:
-      - dbserver
-  dbserver:
-     image: mysql:5.7
-     environment:
-      MYSQL_ROOT_PASSWORD: mysqlpw
+
+  mysql:
+    image: mysql:5.7
+    container_name: mysql-db
+    ports:
+      - "3306:3306"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: wordpress
-      MYSQL_USER: wordpress
-      MYSQL_PASSWORD: mysqlpw
-     ports:
-      - 3306:3306
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: password
