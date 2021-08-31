@@ -1,0 +1,27 @@
+version: '3.2'
+services:
+  web:
+    image: nginx:alpine
+    volumes:
+      - type: volume
+        source: mydata
+        target: /data
+        volume:
+          nocopy: true
+      - type: bind
+        source: ./static
+        target: /opt/app/static
+    ports:
+      - 80:80
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+    - "/var/run/postgres/postgres.sock:/var/run/postgres/postgres.sock"
+    - "dbdata:/var/lib/postgressql/data"
+    
+
+volumes:
+  mydata:
+  dbdata:

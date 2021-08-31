@@ -1472,3 +1472,27 @@ Going to remove wordpress-blog, mysql-db
 Are you sure? [yN] y
 Removing wordpress-blog ... done
 Removing mysql-db       ... done
+
+
+
+example-volumes git:(main) ✗ docker-compose config --services
+web
+db
+
+➜  example-volumes git:(main) ✗ docker-compose exec web sh
+/ # ls
+bin                   etc                   opt                   srv
+data                  home                  proc                  sys
+dev                   lib                   root                  tmp
+docker-entrypoint.d   media                 run                   usr
+docker-entrypoint.sh  mnt                   sbin                  var
+/ # cd opt/app/static
+/opt/app/static # ls
+f1
+
+docker-compose down: es lo contrario al comando "docker-compose up" baja los
+servicios y elimina los conenedores, las redes y elimina las imagenes
+➜  example-volumes git:(main) ✗ docker-compose down
+
+Elimina de manera definitiva los volumenes
+➜  example-volumes git:(main) ✗ docker volume prune 
