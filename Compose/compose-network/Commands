@@ -1,0 +1,46 @@
+compose-network git:(main) ✗ docker-compose up -d
+.
+.
+WARNING: Image for service app was built because it did not already exist. To rebuild this image you must use `docker-compose build` or `docker-compose up --build`.
+Creating mongo_db ... done
+Creating client   ... done
+
+➜  compose-network git:(main) ✗ docker network ls
+NETWORK ID     NAME                     DRIVER    SCOPE
+22c43d20cf84   bridge                   bridge    local
+e60accc2a845   compose-network_net3     bridge    local
+509cd1aa83d6   host                     host      local
+df7eae2aff3a   none                     null      local
+eb04a41bfd90   pr_nginx_default         bridge    local
+68190791f065   recipe-app-api_default   bridge    local
+0375276f6012   red2                     bridge    local 
+
+➜  compose-network git:(main) ✗ docker-compose ps
+  Name               Command             State                  Ports                
+-------------------------------------------------------------------------------------
+client     npm start                     Up      0.0.0.0:80->3000/tcp,:::80->3000/tcp
+mongo_db   docker-entrypoint.sh mongod   Up      27017/tcp 
+
+compose-network git:(main) ✗ wget http://localhost/
+--2021-09-03 16:21:59--  http://localhost/
+Resolviendo localhost (localhost)... 127.0.0.1
+Conectando con localhost (localhost)[127.0.0.1]:80... conectado.
+Petición HTTP enviada, esperando respuesta... 200 OK
+Longitud: 909 [text/html]
+Guardando como: “index.html”
+
+index.html                100%[====================================>]     909  --.-KB/s    en 0s      
+
+2021-09-03 16:21:59 (35,5 MB/s) - “index.html” guardado [909/909]
+
+➜  compose-network git:(main) ✗ docker network inspect compose-network_net3 > net3.js
+
+➜  compose-network git:(main) ✗ docker-compose down
+Stopping client   ... done
+Stopping mongo_db ... done
+Removing client   ... done
+Removing mongo_db ... done
+Removing network compose-network_net3
+
+
+
