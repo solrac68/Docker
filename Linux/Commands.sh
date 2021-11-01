@@ -201,3 +201,115 @@ carlos-VivoBook-15-ASUS-Laptop-X542UF# du -sh
 carlos-VivoBook-15-ASUS-Laptop-X542UF# cd /home
 carlos-VivoBook-15-ASUS-Laptop-X542UF# pwd
 /home
+
+# Enlaces: LN
+
+Linux git:(main) echo "info de mi fichero" > mifichero
+➜  Linux git:(main) ✗ ls
+Commands.sh  dir1  dir2  mifichero
+
+➜  Linux git:(main) ✗ ln mifichero mifichero2 # Enlace duro
+➜  Linux git:(main) ✗ ls -l
+total 24
+-rw-rw-r-- 1 carlos carlos 6699 jul 23 17:49 Commands.sh
+drwxrwxr-x 3 carlos carlos 4096 jul 23 17:37 dir1
+drwxrwxr-x 2 carlos carlos 4096 jul 23 17:37 dir2
+-rw-rw-r-- 2 carlos carlos   19 sep 11 15:39 mifichero
+-rw-rw-r-- 2 carlos carlos   19 sep 11 15:39 mifichero2
+
+➜  Linux git:(main) ✗ ln mifichero mifichero3 # Enlace duro
+➜  Linux git:(main) ✗ ls -l                  
+total 28
+-rw-rw-r-- 1 carlos carlos 6699 jul 23 17:49 Commands.sh
+drwxrwxr-x 3 carlos carlos 4096 jul 23 17:37 dir1
+drwxrwxr-x 2 carlos carlos 4096 jul 23 17:37 dir2
+-rw-rw-r-- 3 carlos carlos   19 sep 11 15:39 mifichero
+-rw-rw-r-- 3 carlos carlos   19 sep 11 15:39 mifichero2
+-rw-rw-r-- 3 carlos carlos   19 sep 11 15:39 mifichero3
+
+➜  Linux git:(main) ✗ cat mifichero
+info de mi fichero
+➜  Linux git:(main) ✗ cat mifichero2
+info de mi fichero
+➜  Linux git:(main) ✗ cat mifichero23
+cat: mifichero23: No existe el archivo o el directorio
+➜  Linux git:(main) ✗ cat mifichero3 
+info de mi fichero
+
+
+➜  Linux git:(main) ✗ echo "Otra Linea" > mifichero2
+➜  Linux git:(main) ✗ cat mifichero
+Otra Linea
+➜  Linux git:(main) ✗ echo "Mas lineas" >> mifichero3
+➜  Linux git:(main) ✗ cat mifichero
+Otra Linea
+Mas lineas
+
+➜  Linux git:(main) ✗ rm mifichero
+➜  Linux git:(main) ✗ cat mifichero
+cat: mifichero: No existe el archivo o el directorio
+➜  Linux git:(main) ✗ cat mifichero2
+Otra Linea
+Mas lineas
+➜  Linux git:(main) ✗ cat mifichero3
+Otra Linea
+Mas lineas
+➜  Linux git:(main) ✗
+
+➜  Linux git:(main) ✗ ln -s mifichero2 mifichero_s # Enlace simbolico
+➜  Linux git:(main) ✗ ls -l
+total 28
+-rw-rw-r-- 1 carlos carlos 8526 sep 11 15:57 Commands.sh
+drwxrwxr-x 3 carlos carlos 4096 jul 23 17:37 dir1
+drwxrwxr-x 2 carlos carlos 4096 jul 23 17:37 dir2
+-rw-rw-r-- 2 carlos carlos   22 sep 11 15:47 mifichero2
+-rw-rw-r-- 2 carlos carlos   22 sep 11 15:47 mifichero3
+lrwxrwxrwx 1 carlos carlos   10 sep 11 15:56 mifichero_s -> mifichero2
+
+➜  Linux git:(main) ✗ cat mifichero_s
+Otra Linea
+Mas lineas
+
+➜  Linux git:(main) ✗ rm mifichero2
+➜  Linux git:(main) ✗ ls -lt
+total 24
+-rw-rw-r-- 1 carlos carlos 8526 sep 11 15:57 Commands.sh
+lrwxrwxrwx 1 carlos carlos   10 sep 11 15:56 mifichero_s -> mifichero2 # ESta en rojo
+-rw-rw-r-- 1 carlos carlos   22 sep 11 15:47 mifichero3
+drwxrwxr-x 3 carlos carlos 4096 jul 23 17:37 dir1
+drwxrwxr-x 2 carlos carlos 4096 jul 23 17:37 dir2
+
+➜  Linux git:(main) ✗ cat mifichero_s
+cat: mifichero_s: No existe el archivo o el directorio
+
+----------------------------------------------------------
+
+➜  Linux git:(main) ✗ ln -s /etc/ etc
+➜  Linux git:(main) ✗ ls -l
+total 24
+-rw-rw-r-- 1 carlos carlos 9354 sep 11 15:59 Commands.sh
+drwxrwxr-x 3 carlos carlos 4096 jul 23 17:37 dir1
+drwxrwxr-x 2 carlos carlos 4096 jul 23 17:37 dir2
+lrwxrwxrwx 1 carlos carlos    5 sep 11 16:01 etc -> /etc/
+-rw-rw-r-- 1 carlos carlos   22 sep 11 15:47 mifichero3
+lrwxrwxrwx 1 carlos carlos   10 sep 11 15:56 mifichero_s -> mifichero2 # En rojo
+
+➜  Linux git:(main) ✗ cd etc
+➜  etc ls
+acpi                           hosts                    prime-discrete
+adduser.conf                   hosts.allow              printcap
+alsa                           hosts.deny               profile
+alternatives                   hp                       profile.d
+anacrontab                     ifplugd                  protocols
+apache2                        ImageMagick-6            pulse
+..
+
+➜  Linux git:(main) ✗ ls -lt
+total 24
+-rw-rw-r-- 1 carlos carlos 9948 sep 11 16:02 Commands.sh
+lrwxrwxrwx 1 carlos carlos   10 sep 11 15:56 mifichero_s -> mifichero2
+-rw-rw-r-- 1 carlos carlos   22 sep 11 15:47 mifichero3
+drwxrwxr-x 3 carlos carlos 4096 jul 23 17:37 dir1
+drwxrwxr-x 2 carlos carlos 4096 jul 23 17:37 dir2
+
+
