@@ -98,6 +98,157 @@ Efectua la inspacción y se envía al archivo containe1.txt
 $ docker inspect 26630210bdea > containe1.txt
 $ docker inspect 7c6d73bed103 > image1.txt
 
+33. Docker Exec: ejecutar comandos contra contenedores
+➜  Docker git:(main) ✗ docker run -it --name mi_python python
+>>> 
+➜  Docker git:(main) ✗ docker ps
+CONTAINER ID   IMAGE     COMMAND     CREATED              STATUS              PORTS     NAMES
+c5e10739b1d2   python    "python3"   About a minute ago   Up About a minute             mi_python
+➜  Docker git:(main) ✗ docker exec -it mi_python bash
+root@c5e10739b1d2:/# 
+
+34. Comandos Docker Image y Docker container
+➜  Docker git:(main) ✗ docker image
+➜  Docker git:(main) ✗ docker image ls
+REPOSITORY   TAG       IMAGE ID       CREATED       SIZE
+python       latest    f48ea80eae5a   11 days ago   917MB
+nginx        latest    ea335eea17ab   12 days ago   141MB
+ubuntu       latest    ba6acccedd29   6 weeks ago   72.8MB
+➜  Docker git:(main) ✗ docker image rm ubuntu:latest
+Error response from daemon: conflict: unable to remove repository reference "ubuntu:latest" (must force) - container d1462074008a is using its referenced image ba6acccedd29
+➜  Docker git:(main) ✗ docker container
+Usage:  docker container COMMAND
+Manage containers
+➜  Docker git:(main) ✗ docker container ls
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+➜  Docker git:(main) ✗ docker container ls -a
+CONTAINER ID   IMAGE     COMMAND                  CREATED          STATUS                     PORTS     NAMES
+c5e10739b1d2   python    "python3"                22 minutes ago   Exited (0) 9 minutes ago             mi_python
+d1462074008a   ubuntu    "bash"                   19 hours ago     Exited (0) 19 hours ago              mi_ubuntu
+d0760423b140   nginx     "/docker-entrypoint.…"   20 hours ago     Exited (0) 19 hours ago              magical_haibt
+➜  Docker git:(main) ✗ docker container ls --help
+
+Usage:  docker container ls [OPTIONS]
+
+List containers
+
+Aliases:
+  ls, ps, list
+
+Options:
+  -a, --all             Show all containers (default shows just running)
+  -f, --filter filter   Filter output based on conditions provided
+      --format string   Pretty-print containers using a Go template
+  -n, --last int        Show n last created containers (includes all states) (default -1)
+  -l, --latest          Show the latest created container (includes all states)
+      --no-trunc        Don't truncate output
+  -q, --quiet           Only display container IDs
+  -s, --size            Display total file sizes
+
+
+36. Docker Logs y Docker Kill
+➜  Docker git:(main) ✗ docker run -d ubuntu sh -c "while true; do date; done"
+01ad88fa222eaaec5a8de31a5a1f685b2ffc37e37bc690171d0ac7b4b201ca04
+➜  Docker git:(main) ✗ docker container ls
+CONTAINER ID   IMAGE     COMMAND                  CREATED              STATUS              PORTS     NAMES
+01ad88fa222e   ubuntu    "sh -c 'while true; …"   About a minute ago   Up About a minute             funny_yalow
+➜  Docker git:(main) ✗ docker logs 01ad88
+Mon Nov 29 16:44:29 UTC 2021
+Mon Nov 29 16:44:29 UTC 2021
+Mon Nov 29 16:44:29 UTC 2021
+Mon Nov 29 16:44:29 UTC 2021
+Mon Nov 29 16:44:29 UTC 2021
+Mon Nov 29 16:44:29 UTC 2021
+.
+.
+.
+➜  Docker git:(main) ✗ docker logs 01ad88 --tail 10
+Mon Nov 29 16:49:12 UTC 2021
+Mon Nov 29 16:49:12 UTC 2021
+Mon Nov 29 16:49:12 UTC 2021
+Mon Nov 29 16:49:12 UTC 2021
+Mon Nov 29 16:49:12 UTC 2021
+Mon Nov 29 16:49:12 UTC 2021
+Mon Nov 29 16:49:12 UTC 2021
+Mon Nov 29 16:49:12 UTC 2021
+Mon Nov 29 16:49:12 UTC 2021
+Mon Nov 29 16:49:12 UTC 2021
+
+➜  Docker git:(main) ✗ docker kill 01ad88
+01ad88
+➜  Docker git:(main) ✗ docker ps         
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+➜  Docker git:(main) ✗ docker ps -a
+CONTAINER ID   IMAGE     COMMAND                  CREATED          STATUS                        PORTS     NAMES
+01ad88fa222e   ubuntu    "sh -c 'while true; …"   11 minutes ago   Exited (137) 21 seconds ago             funny_yalow
+c5e10739b1d2   python    "python3"                5 hours ago      Exited (0) 5 hours ago                  mi_python
+d1462074008a   ubuntu    "bash"                   24 hours ago     Exited (0) 24 hours ago                 mi_ubuntu
+d0760423b140   nginx     "/docker-entrypoint.…"   24 hours ago     Exited (0) 24 hours ago                 magical_haibt
+
+37. Docker Top, Docker Stats
+
+➜  Docker git:(main) ✗ docker run -it ubuntu bash
+root@931b51e1365e:/# 
+
+➜  Docker git:(main) ✗ docker ps
+CONTAINER ID   IMAGE     COMMAND   CREATED         STATUS         PORTS     NAMES
+931b51e1365e   ubuntu    "bash"    6 minutes ago   Up 6 minutes             trusting_borg
+
+➜  Docker git:(main) ✗ docker top 931b5
+UID                 PID                 PPID                C                   STIME               TTY                 TIME                CMD
+root                1230430             1230407             0                   16:26               pts/0               00:00:00            bash
+
+root@931b51e1365e:/# top  
+
+➜  Docker git:(main) ✗ docker stats 931b5
+CONTAINER ID   NAME            CPU %     MEM USAGE / LIMIT     MEM %     NET I/O       BLOCK I/O     PIDS
+931b51e1365e   trusting_borg   0.00%     4.152MiB / 15.52GiB   0.03%     11.6kB / 0B   3.38MB / 0B   2
+
+
+root@931b51e1365e:/# while true
+> do
+> date
+> done
+
+➜  Docker git:(main) ✗ docker stats 931b5
+
+39. Docker Inspect
+➜  Docker git:(main) ✗ docker ps -l      
+CONTAINER ID   IMAGE     COMMAND   CREATED          STATUS          PORTS     NAMES
+931b51e1365e   ubuntu    "bash"    30 minutes ago   Up 30 minutes             trusting_borg
+
+➜  Docker git:(main) ✗ docker inspect 931b51e
+[
+    {
+        "Id": "931b51e1365edf23c04bfaa3909a53cba7896070bc2f3bcece982c07b94e640d",
+        "Created": "2021-11-29T21:26:30.526428904Z",
+        "Path": "bash",
+        "Args": [],
+        "State": {
+            "Status": "running",
+
+➜  Docker git:(main) ✗ docker inspect 931b51e > container1.txt
+
+➜  Docker git:(main) ✗ docker images                          
+REPOSITORY   TAG       IMAGE ID       CREATED       SIZE
+python       latest    f48ea80eae5a   12 days ago   917MB
+nginx        latest    ea335eea17ab   12 days ago   141MB
+ubuntu       latest    ba6acccedd29   6 weeks ago   72.8MB
+➜  Docker git:(main) ✗ docker inspect f48ea80eae5a
+[
+    {
+        "Id": "sha256:f48ea80eae5a5683e2a734cf4697827339af3ced11e26d0ad58433ddf6fac24f",
+        "RepoTags": [
+            "python:latest"
+        ],
+        "RepoDigests": [
+            "python@sha256:f44726de10d15558e465238b02966a8f83971fd85a4c4b95c263704e6a6012e9"
+        ],
+        "Parent": "",
+        "Comment": "",
+        "Created": "2021-11-17T15:29:24.884398352Z",
+        "Container": "cb8ae5d070e71c4d53aedd1bb0e3279cbf4c4dd5d3cb7997967b9a2976cec68f",
+
 41. Introducción a los puertos en Docker
 
 Presentación
@@ -106,6 +257,9 @@ Presentación
 NGINX
 $ docker pull nginx
 $ docker images
+
+
+
 
 crea el contenedor desde la imagen de nginx y expone todos los puertos publicos
 $ docker run -d -P nginx
