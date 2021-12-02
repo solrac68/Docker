@@ -611,9 +611,17 @@ $ docker inspect ubuntua | grep IPAdd
                     "IPAddress": "172.18.0.2",
                     
 
-
-
-
+➜  Docker git:(main) ✗ docker network connect red2 ubuntua
+➜  Docker git:(main) ✗ docker inspect ubuntua | grep IPAdd 
+            "SecondaryIPAddresses": null,
+            "IPAddress": "",
+                    "IPAddress": "172.19.0.2",
+                    "IPAddress": "172.20.0.2",
+➜  Docker git:(main) ✗ docker network disconnect red2 ubuntua
+➜  Docker git:(main) ✗ docker inspect ubuntua | grep IPAdd   
+            "SecondaryIPAddresses": null,
+            "IPAddress": "",
+                    "IPAddress": "172.19.0.2",
 
 
 49. Enlazar contenedores con --link. Con imagen Busybox
