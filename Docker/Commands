@@ -250,7 +250,6 @@ ubuntu       latest    ba6acccedd29   6 weeks ago   72.8MB
         "Container": "cb8ae5d070e71c4d53aedd1bb0e3279cbf4c4dd5d3cb7997967b9a2976cec68f",
 
 41. Introducción a los puertos en Docker
-
 Presentación
 
 42. Gestionar Puertos para acceder al contenedor. Ejemplo con
@@ -314,6 +313,7 @@ $ docker start ef3b63ded848
 $ docker start sharp_neumann
 
 $ docker inspect nginx2 | grep IPAd
+➜  Docker git:(main) ✗ docker inspect nginx1 | grep IPAd
 
 "SecondaryIPAddresses": null,
 "IPAddress": "172.17.0.2",
@@ -461,13 +461,31 @@ NETWORK ID     NAME      DRIVER    SCOPE
 39382b5cf72b   host      host      local
 7f083cad8543   none      null      local
 
+➜  Docker git:(main) ✗ docker network create red1 
+5ad6009e6a2a7deda9796135507a26426ae7225c73230cfa36dd8bf8b0efd9f6
 
-$ docker network ls
+➜  Docker git:(main) ✗ docker network ls          
 NETWORK ID     NAME      DRIVER    SCOPE
-456b41888b3e   bridge    bridge    local
-39382b5cf72b   host      host      local
-7f083cad8543   none      null      local
-9e716961240b   red1      bridge    local
+4c51caf988c9   bridge    bridge    local
+509cd1aa83d6   host      host      local
+df7eae2aff3a   none      null      local
+5ad6009e6a2a   red1      bridge    local
+
+➜  Docker git:(main) ✗ nmcli con
+NAME                 UUID                                  TYPE      DEVICE          
+Conexión cableada 1  81faa571-7eb6-3afd-bfae-2dd5dbe9e179  ethernet  enp2s0          
+FAMILIA HINCAPIE     32833099-43b2-4021-8eed-d925e35c22aa  wifi      wlp3s0          
+docker0              6242fa26-2f26-40ea-a3ad-fdcae44e8db3  bridge    docker0         
+br-5ad6009e6a2a      85d6aa25-31da-4af8-ad73-66dc848268ef  bridge    br-5ad6009e6a2a 
+Alicia               0553e58e-1467-479d-b3e4-92f57b50f2e0  wifi      --              
+ARRIS-ECDF           7dbbc936-176b-4513-b299-2c58a71a7085  wifi      --              
+ARRIS-ECDF-5G        b5645dc4-31d8-4313-8823-10a7ce5a8b10  wifi      --              
+famihincapie         b11dc8c5-7c2a-4b31-9304-1e5a9b4f7a50  wifi      --              
+Familia hincapie     68580a66-8ee1-4167-8824-2c3433a09e8d  wifi      --              
+FAMILIA PATINO       b3ae4b31-d6fb-4dc0-b33f-1741064c0f36  wifi      --              
+IG_SERVICES          204e7ad3-96e7-4df0-ab05-55adb09a4b6c  wifi      --              
+IGWIFI               a317d14c-fe5e-42fd-85c0-a7fd50c10731  wifi      --              
+UdeAEstudiantes      b10cc695-4050-42a6-a1cc-473414ff6115  wifi      -- 
 
 $ docker inspect red1
 [
@@ -502,6 +520,7 @@ $ docker inspect red1
 ]
 
 $ docker network create --subnet=172.19.0.0/16 red2
+$ nmcli con
 
 $ docker inspect red2
 [
