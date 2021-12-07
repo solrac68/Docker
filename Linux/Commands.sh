@@ -313,3 +313,98 @@ drwxrwxr-x 3 carlos carlos 4096 jul 23 17:37 dir1
 drwxrwxr-x 2 carlos carlos 4096 jul 23 17:37 dir2
 
 
+24. Información sobre usuarios y grupos
+
+sudo <user> # Ubuntu - Si no da un user se entiende que es el root
+su <user> # Debian - Si no da un user se entiende que es el root
+
+➜  Docker git:(main) ls -lt 
+total 560
+-rw-rw-r-- 1 carlos carlos   7300 nov 29 17:05 container1.txt
+drwxrwxr-x 4 carlos carlos   4096 sep 11 16:05 Linux
+-rw-rw-r-- 1 carlos carlos 196013 sep  3 16:29 21-Práctica-Docker-compose+básico.pdf
+-rw-rw-r-- 1 carlos carlos 343155 sep  3 16:29 22-Práctica-Docker-Compose-mean-stack.pdf
+
+Segunda columna usuario
+Tercera columna grupo
+
+➜  Docker git:(main) ✗ whoami
+carlos
+➜  Docker git:(main) ✗ groups # Los grupos a los que pertences
+carlos adm cdrom sudo dip plugdev lpadmin sambashare docker
+
+➜  Docker git:(main) ✗ sudo su
+[sudo] contraseña para carlos: 
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/carlos/Proyectos/Docker# 
+
+➜  Docker git:(main) ✗ id
+uid=1000(carlos) gid=1000(carlos) grupos=1000(carlos),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),116(lpadmin),126(sambashare),129(docker)
+
+
+➜  Docker git:(main) ✗ sudo su
+[sudo] contraseña para carlos: 
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/carlos/Proyectos/Docker# adduser ana # Agregar el usuario Ana
+
+# Creación de un grupo
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/carlos/Proyectos/Docker# addgroup alumnos
+addgroup: El grupo `alumnos' ya existe.
+
+# Cambio de grupo principal de ana
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/carlos/Proyectos/Docker# usermod -g alumnos ana
+usermod: sin cambios
+
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/carlos/Proyectos/Docker# id ana
+uid=1001(ana) gid=1002(alumnos) grupos=1002(alumnos)
+
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/carlos/Proyectos/Docker# su ana
+ana@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/carlos/Proyectos/Docker$ cd
+
+ana@carlos-VivoBook-15-ASUS-Laptop-X542UF:~$
+ana@carlos-VivoBook-15-ASUS-Laptop-X542UF:~$ touch fichero_ana
+
+# Cambio de usuario y grupo al archivo fichero_ana
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/ana# chown carlos:users fichero_ana
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/ana# ls -lt
+total 12
+-rw-r--r-- 1 carlos users      0 dic  7 11:58 fichero_ana
+-rw-r--r-- 1 ana    alumnos 8980 dic  5 13:40 examples.desktop
+
+# Cambio de propietario a root del fichero_ana
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/ana# chown root fichero_ana
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/ana# ls -lt
+total 12
+-rw-r--r-- 1 root users      0 dic  7 11:58 fichero_ana
+-rw-r--r-- 1 ana  alumnos 8980 dic  5 13:40 examples.desktop
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/ana# 
+
+#Cambiar solamente el grupo ()ana
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/ana# chown :ana fichero_ana
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/ana# ls -lt
+total 12
+-rw-r--r-- 1 root ana        0 dic  7 11:58 fichero_ana
+-rw-r--r-- 1 ana  alumnos 8980 dic  5 13:40 examples.desktop
+
+# Cambio de la contraseña ana
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/ana# passwd ana
+Nueva contraseña: 
+Vuelva a escribir la nueva contraseña: 
+passwd: contraseña actualizada correctamente
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/ana# ^C
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/ana# 
+
+
+26. Los permisos en los ficheros
+-rw-rw-r-- 1 carlos carlos   7300 nov 29 17:05 container1.txt
+-: significa que es un archivo
+primer grupo: permisos del usuario
+segundo grupo: permisos del grupo
+tercer grupo: permisos a otros
+27. Los permisos en los directorios
+drwxrwxr-x 6 carlos carlos   4096 sep  3 16:01 Compose
+d: directorio
+r: listar el directorio: poder ver lo que contiene
+w: modificar lo que contiene, escribir y borrar fichero y directorio que se encuentren dentro.
+x: acceder al directorio
+
+
+

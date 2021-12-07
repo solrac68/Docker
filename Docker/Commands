@@ -1677,3 +1677,4 @@ servicios y elimina los conenedores, las redes y elimina las imagenes
 
 Elimina de manera definitiva los volumenes
 ➜  example-volumes git:(main) ✗ docker volume prune 
+
