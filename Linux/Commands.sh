@@ -399,6 +399,7 @@ root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/ana#
 primer grupo: permisos del usuario
 segundo grupo: permisos del grupo
 tercer grupo: permisos a otros
+
 27. Los permisos en los directorios
 drwxrwxr-x 6 carlos carlos   4096 sep  3 16:01 Compose
 d: directorio
@@ -408,3 +409,122 @@ x: acceder al directorio
 
 
 
+28. Cambiar permisos. Orden chmod
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/carlos/Proyectos/Docker# cd /home/ana
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/ana# ls -lt
+total 12
+---------- 1 ana  alumnos    0 dic  8 13:51 carta_secreta.txt
+-rw-r--r-- 1 root ana        0 dic  7 11:58 fichero_ana
+-rw-r--r-- 1 ana  alumnos 8980 dic  5 13:40 examples.desktop
+
+# Agregar permisos de lectura al aarchivo carta_secreta.txt
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/ana# chmod +r carta_secreta.txt 
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/ana# ls -lt
+total 12
+-r--r--r-- 1 ana  alumnos    0 dic  8 13:51 carta_secreta.txt
+-rw-r--r-- 1 root ana        0 dic  7 11:58 fichero_ana
+-rw-r--r-- 1 ana  alumnos 8980 dic  5 13:40 examples.desktop
+
+# Quitar permisos de lectura al aarchivo carta_secreta.txt
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/ana# chmod -r carta_secreta.txt 
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/ana# ls -lt
+total 12
+---------- 1 ana  alumnos    0 dic  8 13:51 carta_secreta.txt
+-rw-r--r-- 1 root ana        0 dic  7 11:58 fichero_ana
+-rw-r--r-- 1 ana  alumnos 8980 dic  5 13:40 examples.desktop
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/ana# 
+
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/ana# chmod +r carta_secreta.txt 
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/ana# ls -lt
+total 12
+-r--r--r-- 1 ana  alumnos    0 dic  8 13:51 carta_secreta.txt
+-rw-r--r-- 1 root ana        0 dic  7 11:58 fichero_ana
+-rw-r--r-- 1 ana  alumnos 8980 dic  5 13:40 examples.desktop
+
+# Quitar permisos de lectura al usuario propietario sobre el archivo carta_secreta.txt
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/ana# chmod u-r carta_secreta.txt 
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/ana# ls -lt
+total 12
+----r--r-- 1 ana  alumnos    0 dic  8 13:51 carta_secreta.txt
+-rw-r--r-- 1 root ana        0 dic  7 11:58 fichero_ana
+-rw-r--r-- 1 ana  alumnos 8980 dic  5 13:40 examples.desktop
+
+# Agregar permiso de ejecución x a otros sobre el archivo carta_secreta.txt 
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/ana# chmod o+x carta_secreta.txt 
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/ana# ls -lt
+total 12
+----r--r-x 1 ana  alumnos    0 dic  8 13:51 carta_secreta.txt
+-rw-r--r-- 1 root ana        0 dic  7 11:58 fichero_ana
+-rw-r--r-- 1 ana  alumnos 8980 dic  5 13:40 examples.desktop
+
+# Agregar permiso de lectura al usuario y ejecución a otros sobre el archivo carta_secreta.txt 
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/ana# chmod u+r,g+x carta_secreta.txt 
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/ana# ls -lt
+total 12
+-r--r-xr-x 1 ana  alumnos    0 dic  8 13:51 carta_secreta.txt
+-rw-r--r-- 1 root ana        0 dic  7 11:58 fichero_ana
+-rw-r--r-- 1 ana  alumnos 8980 dic  5 13:40 examples.desktop
+
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/ana# chmod u=w,o=wx carta_secreta.txt 
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/ana# ls -lt
+total 12
+--w-r-x-wx 1 ana  alumnos    0 dic  8 13:51 carta_secreta.txt
+-rw-r--r-- 1 root ana        0 dic  7 11:58 fichero_ana
+-rw-r--r-- 1 ana  alumnos 8980 dic  5 13:40 examples.desktop
+
+# No concede ningun permiso a ninguno de los tres grupos u,g,o
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/ana# chmod u=,g=,o= carta_secreta.txt 
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/ana# ls -lt
+total 12
+---------- 1 ana  alumnos    0 dic  8 13:51 carta_secreta.txt
+-rw-r--r-- 1 root ana        0 dic  7 11:58 fichero_ana
+-rw-r--r-- 1 ana  alumnos 8980 dic  5 13:40 examples.desktop
+
+# Se le conceden todos los permisos a los tres grupos u,g,o
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/ana# chmod u=rwx,g=rwx,o=rwx carta_secreta.txt 
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/ana# ls -lt
+total 12
+-rwxrwxrwx 1 ana  alumnos    0 dic  8 13:51 carta_secreta.txt
+-rw-r--r-- 1 root ana        0 dic  7 11:58 fichero_ana
+-rw-r--r-- 1 ana  alumnos 8980 dic  5 13:40 examples.desktop
+
+29. Cambiar permisos con chmod usando números
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/carlos/Proyectos/Docker/Linux# mkdir dir3
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/carlos/Proyectos/Docker/Linux# cd dir3
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/carlos/Proyectos/Docker/Linux/dir3# ls -lt
+total 0
+
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/carlos/Proyectos/Docker/Linux/dir3# touch ejemplo
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/carlos/Proyectos/Docker/Linux/dir3# ls -lt
+total 0
+-rw-r--r-- 1 root root 0 dic  8 16:06 ejemplo
+
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/carlos/Proyectos/Docker/Linux/dir3# chmod 164 ejemplo 
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/carlos/Proyectos/Docker/Linux/dir3# ls -lt
+total 0
+---xrw-r-- 1 root root 0 dic  8 16:06 ejemplo
+
+# Solo permisos de ejecución a los otros
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/carlos/Proyectos/Docker/Linux/dir3# chmod 001 ejemplo 
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/carlos/Proyectos/Docker/Linux/dir3# ls -lt
+total 0
+---------x 1 root root 0 dic  8 16:06 ejemplo
+
+# Todos los permisos a todos
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/carlos/Proyectos/Docker/Linux/dir3# chmod 777 ejemplo 
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/carlos/Proyectos/Docker/Linux/dir3# ls -lt
+total 0
+-rwxrwxrwx 1 root root 0 dic  8 16:06 ejemplo
+
+# Quitar todos los permisos a todos
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/carlos/Proyectos/Docker/Linux/dir3# chmod 000 ejemplo 
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/carlos/Proyectos/Docker/Linux/dir3# ls -lt
+total 0
+---------- 1 root root 0 dic  8 16:06 ejemplo
+
+
+# Todos los permisos al usuario y solo permisos de lectura al resto
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/carlos/Proyectos/Docker/Linux/dir3# chmod 744 ejemplo 
+root@carlos-VivoBook-15-ASUS-Laptop-X542UF:/home/carlos/Proyectos/Docker/Linux/dir3# ls -lt
+total 0
+-rwxr--r-- 1 root root 0 dic  8 16:06 ejemplo
