@@ -563,6 +563,7 @@ NETWORK ID     NAME      DRIVER    SCOPE
 9e716961240b   red1      bridge    local
 e1f6f95171ba   red2      bridge    local
 
+# Se lanza un contenedor de nombre ubuntua desde una imagen ubuntu y se asocia a la red llamada red1
 $ docker run -it --name ubuntua --network red1 ubuntu
 
 $ docker inspect ubuntua | grep IPAdd
@@ -617,6 +618,8 @@ $ docker inspect ubuntua | grep IPAdd
             "IPAddress": "",
                     "IPAddress": "172.19.0.2",
                     "IPAddress": "172.20.0.2",
+
+# Desconectar de la red2
 ➜  Docker git:(main) ✗ docker network disconnect red2 ubuntua
 ➜  Docker git:(main) ✗ docker inspect ubuntua | grep IPAdd   
             "SecondaryIPAddresses": null,
@@ -626,6 +629,7 @@ $ docker inspect ubuntua | grep IPAdd
 
 49. Enlazar contenedores con --link. Con imagen Busybox
 
+# Cuenta todos los contenedores que se tienen
 $ docker ps -a | wc -l
 12
 
@@ -646,12 +650,16 @@ ff533263ae17
 2a7146294762
 d18394251999
 
-Eliminar todos los contenedores
+#Eliminar todos los contenedores
 docker rm `docker ps -aq`
 
 Descarga y ejecuta busybox se inicia la consola iteractiva y se elimina contenedor cuando no se requiere.
 
+# crea un contenedor llamado b1 desde la imagen busybox
 $ docker run -it --rm --name b1 busybox
+
+# crea un contenedor llamado b2 desde la imagen busybox
+$ docker run -it --rm --name b2 busybox
 127.0.0.1       localhost
 ::1     localhost ip6-localhost ip6-loopback
 fe00::0 ip6-localnet
@@ -698,9 +706,10 @@ PING 172.17.0.2 (172.17.0.2): 56 data bytes
 64 bytes from 172.17.0.2: seq=1 ttl=64 time=0.082 ms
 64 bytes from 172.17.0.2: seq=2 ttl=64 time=0.083 ms
 
-Crear un contenedor y permite crear un enlace con el nombre de l máquina y un alias.
+#Crear un contenedor de nombre b3 desde la imagen  busybox y permite crear un enlace con la máquina b1 que tiene cómo alias maquina1.
 $ docker run -it --rm --name b3 --link b1:maquina1 busybox
 
+# consulta la ip 
 # cat etc/hosts
 127.0.0.1       localhost
 ::1     localhost ip6-localhost ip6-loopback
@@ -727,8 +736,11 @@ PING b1 (172.17.0.2): 56 data bytes
 
 CRear un contenedor de MySQl VERSIÓN 5.7
 
-$ docker run --name mysql_server --rm --network red1 -e MYSQL_ROOT_PASSWORD=secret mysql:5.7
+#se crea un contenedor llamado mysql_server desde la imagen mysql:5.7 en modo background (-d) 
+que se elimine apenas salga del contenedor (rm) y se le agrega a la red con el nombre red1
+$ docker run -d --name mysql_server --rm --network red1 -e MYSQL_ROOT_PASSWORD=secret mysql:5.7
 
+#Conectandose con el anterior contenedor
 $ docker exec -it mysql_server bash
 root@ce6bad565b4a:/# mysql -u root -p
 Enter password:
@@ -760,7 +772,11 @@ Creación de un contenedor cliente que se conecta al servidor mysql_server
 No es necesario de hacer link cuando se crea un contenedor este crea un dns con los nombres
 de las máquinas (mysql_server).
 
+# Se crea otro contenedor iteractivo de nombre mysql_client desde la imagen mysql:5.7
+# se le agrega a la red llamada red1 y se lanza el comando bash
 $ docker run -it --name mysql_client --rm --network red1 mysql:5.7 bash
+
+# se intanta conectar a la base de datos remota mysql_server  (-h) con el usuario root
 root@878c4c252476:/# mysql -h mysql_server -u root -p
 Enter password: secret
 Welcome to the MySQL monitor.  Commands end with ; or \g.
