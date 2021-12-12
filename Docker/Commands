@@ -945,6 +945,7 @@ root@1cf7b7feb2d0:/datos#
 
 58. Visualizar información de volúmenes
 
+# Se pueden ver los volumenes creados 
 $ docker volume ls
 DRIVER    VOLUME NAME
 local     446f64611961e9eeba22929c20a29449cabb91a06349f08c199df3d7780e2f69
@@ -964,7 +965,9 @@ $ docker volume inspect 446f64611961e9eeba22929c20a29449cabb91a06349f08c199df3d7
 
 
 60. Crear un directorio compartido con el host
-$ docker run -it -v /home/ubuntu/environment/dir1:/dir1 --name ubuntu2 ubuntu
+Se crea una imagen de docker de nombre ubuntu2 desde la imagen ubuntu con un volumen que reside
+en la máquina local en la dirección /home/carlos/Proyectos/Docker/dir1 y dentro de la imagen en /dir1
+➜  Docker git:(main) ✗ docker run -it -v /home/carlos/Proyectos/Docker/dir1:/dir1 --name ubuntu2 ubuntu
 root@ee059a6b13d5:/dir1# 
 root@ee059a6b13d5:/dir1# touch f1
 
@@ -978,11 +981,78 @@ f1  f2fromhost
 
 61. Compartir volúmenes entre contenedores
 
-Se crea el contenedor ubuntu5 y utiliza el mismo volumen que ubuntu4
-$ docker run -it --name ubuntu5 --volumes-from ubuntu4 ubuntu bash
+# Se crea una imagen de nombre ubuntu4 con un volumen llamado /datos en el contenedor 
+➜  Docker git:(main) ✗ docker run -it -v /datos --name ubuntu4 ubuntu bash
+root@a0c815a56ea1:/# cd datos
+root@a0c815a56ea1:/datos# touch f1.txt
+root@a0c815a56ea1:/datos# ls -lt
+total 0
+-rw-r--r-- 1 root root 0 Dec 12 20:25 f1.txt
+root@a0c815a56ea1:/datos# 
 
+Se crea el contenedor de nombre ubuntu5 y utiliza el mismo volumen que ubuntu4
+➜  Docker git:(main) docker run -it --name ubuntu5 --volumes-from ubuntu4 ubuntu bash
+root@7b47cdfdcdc0:/# cd datos
+root@7b47cdfdcdc0:/datos# ls -lt
+total 0
+-rw-r--r-- 1 root root 0 Dec 12 20:25 f1.txt
+root@7b47cdfdcdc0:/datos#
 
+# LOS VOLUMENES SEGUIRAN EXISTIENDO MIENTRAS EXISTAN IMAGENES QUE APUNTAN A ELLOS
+# EL ÚLTIMO VOLUMEN CREADO FUE cd89f111792c1b3015c49d6fa23e32955d62410d67df551613d64f1678f6423a
+➜  Docker git:(main) ✗ docker volume ls
+DRIVER    VOLUME NAME
+local     0a43361b56d212496c9a13cd596c78bd1c6dfac006e7d284771991a342ae5f3f
+local     0e620859b67420fb2a624c4cbec47e86a339ce28664eb3375d56b69cd92f717a
+local     3a3fb0f99497a69cfe61b339f9bd120811337e1c821ce53b5dca0fee41b3df45
+local     70dc88dce7729464a18407ace8d9c462a6b904b8fcfebe7b40b8199851fb32f8
+local     75a76427ce7529b3754f71bc47c126a349cfe7822a2dd8277941956139c6b781
+local     95a77317c53a792ee4d94819151cc67e8778804acbf1255a114db61182036a5d
+local     8833c46242a64d27bfd0738c21321f840cbdea119215fa666e4295ee8f133b64
+local     cd89f111792c1b3015c49d6fa23e32955d62410d67df551613d64f1678f6423a
 
+# Sí paramos los dos contenedores todavía sigue existeindo el volumen cd89f111792c1b3015c49d6fa23e32955d62410d67df551613d64f1678f6423a
+➜  Docker git:(main) ✗ docker ps
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+➜  Docker git:(main) ✗ docker volume ls
+DRIVER    VOLUME NAME
+local     0a43361b56d212496c9a13cd596c78bd1c6dfac006e7d284771991a342ae5f3f
+local     0e620859b67420fb2a624c4cbec47e86a339ce28664eb3375d56b69cd92f717a
+local     3a3fb0f99497a69cfe61b339f9bd120811337e1c821ce53b5dca0fee41b3df45
+local     70dc88dce7729464a18407ace8d9c462a6b904b8fcfebe7b40b8199851fb32f8
+local     75a76427ce7529b3754f71bc47c126a349cfe7822a2dd8277941956139c6b781
+local     95a77317c53a792ee4d94819151cc67e8778804acbf1255a114db61182036a5d
+local     8833c46242a64d27bfd0738c21321f840cbdea119215fa666e4295ee8f133b64
+local     cd89f111792c1b3015c49d6fa23e32955d62410d67df551613d64f1678f6423a
+
+➜  Docker git:(main) ✗ docker ps -a
+CONTAINER ID   IMAGE     COMMAND   CREATED             STATUS                      PORTS     NAMES
+7b47cdfdcdc0   ubuntu    "bash"    30 minutes ago      Exited (0) 20 minutes ago             ubuntu5
+a0c815a56ea1   ubuntu    "bash"    34 minutes ago      Exited (0) 20 minutes ago             ubuntu4
+296ccac8343e   ubuntu    "bash"    About an hour ago   Exited (0) 53 minutes ago             ubuntu2
+80aa381ba3f1   ubuntu    "bash"    20 hours ago        Exited (0) 19 hours ago               ubuntu1
+# Se borran los contenedores ubuntu5 y ubuntu4, entonces el volumen cd89f111792c1b3015c49d6fa23e32955d62410d67df551613d64f1678f6423a
+# ya no es utilizable
+➜  Docker git:(main) ✗ docker rm ubuntu5
+ubuntu5
+➜  Docker git:(main) ✗ docker rm ubuntu4
+ubuntu4
+➜  Docker git:(main) ✗ docker ps -a     
+CONTAINER ID   IMAGE     COMMAND   CREATED             STATUS                      PORTS     NAMES
+296ccac8343e   ubuntu    "bash"    About an hour ago   Exited (0) 54 minutes ago             ubuntu2
+80aa381ba3f1   ubuntu    "bash"    20 hours ago        Exited (0) 19 hours ago               ubuntu1
+➜  Docker git:(main) ✗ 
+
+# Se pueden borrar los volumenes que no estan asociados a una imagen
+➜  Docker git:(main) ✗ docker volume rm `docker volume ls -q`                                         
+0a43361b56d212496c9a13cd596c78bd1c6dfac006e7d284771991a342ae5f3f
+0e620859b67420fb2a624c4cbec47e86a339ce28664eb3375d56b69cd92f717a
+3a3fb0f99497a69cfe61b339f9bd120811337e1c821ce53b5dca0fee41b3df45
+70dc88dce7729464a18407ace8d9c462a6b904b8fcfebe7b40b8199851fb32f8
+95a77317c53a792ee4d94819151cc67e8778804acbf1255a114db61182036a5d
+8833c46242a64d27bfd0738c21321f840cbdea119215fa666e4295ee8f133b64
+75a76427ce7529b3754f71bc47c126a349cfe7822a2dd8277941956139c6b781
+cd89f111792c1b3015c49d6fa23e32955d62410d67df551613d64f1678f6423a
 
 63. Crear un volumen independiente
 
