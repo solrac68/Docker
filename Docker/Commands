@@ -1056,12 +1056,14 @@ cd89f111792c1b3015c49d6fa23e32955d62410d67df551613d64f1678f6423a
 
 63. Crear un volumen independiente
 
-:/var/lib/docker/volumes $ docker volume create vol1
+#Crear un volumen con un nombre partícular
+➜  Docker git:(main) docker volume create vol1  
 vol1
-:/var/lib/docker/volumes $ ls
-backingFsBlockDev  metadata.db  vol1
+➜  Docker git:(main) docker volume ls
+DRIVER    VOLUME NAME
+local     vol1
 
-:/var/lib/docker/volumes $ docker volume inspect vol1
+➜  Docker git:(main) docker volume inspect vol1
 [
     {
         "CreatedAt": "2021-06-29T18:59:50Z",
@@ -1074,7 +1076,9 @@ backingFsBlockDev  metadata.db  vol1
     }
 ]
 
-:/var/lib/docker/volumes $ docker run -it --name ubuntu7 -v vol1:/dir1 ubuntu bash
+# Se crea un volumen de nombre ubuntu7 y se le asocia el volumen vol1 con el directorio /dir1 dentro
+# de la imagen
+➜  Docker git:(main) docker run -it --name ubuntu7 -v vol1:/dir1 ubuntu bash
 root@c82b88699794:/# ls
 bin  boot  dev  dir1  etc  home  lib  lib32  lib64  libx32  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
 root@c82b88699794:/# cd dir1
@@ -1088,14 +1092,15 @@ backingFsBlockDev  metadata.db  vol1
 f1
 
 
-El mismo volumne puede ser compartido con otro contenedor
-carlos:~/environment (main) $ docker run -it --name ubuntu8 -v vol1:/dir1 ubuntu bash
-root@254e710dda6b:/# cd dir1/
-root@254e710dda6b:/dir1# ls
-f1
-root@254e710dda6b:/dir1# touch f2.txt
+# El mismo volumne puede ser compartido con otro contenedor
+➜  Docker git:(main) ✗ docker run -it --name ubuntu8 -v vol1:/dir1 ubuntu bash
+root@8e07a27d564e:/# cd dir1
+root@8e07a27d564e:/dir1# ls -lt
+total 0
+-rw-r--r-- 1 root root 0 Dec 12 21:40 f1.txt
+root@8e07a27d564e:/dir1# 
 
-Compartiendo el mismo volumen, la carpeta datos es de solo lectura.
+# Compartiendo el mismo volumen, la carpeta datos es de solo lectura.
 carlos:~/environment (main) $ docker run -it --name ubuntu9 -v vol1:/datos:ro ubuntu bash
 
 
