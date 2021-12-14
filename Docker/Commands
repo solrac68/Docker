@@ -1146,7 +1146,9 @@ A /usr/share/doc/libssl1.1/copyright
 
 
 68. Docker commit. Crear una imagen manualmente
-carlos:~/environment (main) $ docker commit ubuntu1 mi_ubuntu                                                                                                                                           
+
+# Crea la imagen llamada mi_ubuntu desde el contenedor modificado ubuntu1
+➜  Docker git:(main) docker commit ubuntu1 mi_ubuntu                                                                                                                                         
 sha256:3587aedb13bcee1cc29bd1bfb5293f2ad7a29fedfc36b03f7e9681374a748953
 
 carlos:~/environment (main) $ docker images
@@ -1154,6 +1156,7 @@ REPOSITORY   TAG       IMAGE ID       CREATED          SIZE
 mi_ubuntu    latest    3587aedb13bc   28 seconds ago   110MB
 ubuntu       latest    9873176a8ff5   2 weeks ago      72.7MB
 
+# Creo un contenedor desde la imagen recien creada mi_ubuntu
 carlos:~/environment (main) $ docker run -it mi_ubuntu bash
 root@670298ad049c:/# wget
 wget: missing URL
@@ -1166,14 +1169,14 @@ root@670298ad049c:/#
 69. Dockerfile
 70. Crear una imagen de un Dockerfile
 
-# Archivo Dockefile dentro de la carpeta ~/environment/Docker/imagen_python
+# Archivo Dockefile dentro de la carpeta ./Docker/Docker/imagen_python/Dockerfile_0
 # Cargue de la imagen inicial
 FROM ubuntu
 RUN apt-get update
 RUN apt-get install -y python
 
 # Se ejecutan las instrucciones del archivo Dockerfile -t imagen_python crea una imagen de nombre imagen_python
-carlos:~/environment/Docker/imagen_python (main) $ docker build -t imagen_python .
+➜  Dockerfile_0 git:(main) ✗ docker build -t imagen_python .
 
 
 carlos:~/environment/Docker/imagen_python (main) $ docker images
@@ -1182,7 +1185,7 @@ imagen_python   latest    e872741f236e   4 minutes ago    138MB
 mi_ubuntu       latest    3587aedb13bc   35 minutes ago   110MB
 ubuntu          latest    9873176a8ff5   2 weeks ago      72.7MB
 
-carlos:~/environment/Docker/imagen_python (main) $ docker run -it imagen_python python
+➜  Dockerfile_0 git:(main) ✗ docker run -it imagen_python python
 Python 2.7.18 (default, Mar  8 2021, 13:02:45) 
 [GCC 9.3.0] on linux2
 Type "help", "copyright", "credits" or "license" for more information.
@@ -1197,7 +1200,7 @@ RUN apt-get install -y python
 RUN echo 1.0 >> /etc/version && apt-get install -y git \
     && apt-get install -y iputils-ping
 
-carlos:~/environment (main) $ docker image history imagen_python
+➜  Dockerfile_1 git:(main) ✗  $ docker image history imagen_python
 IMAGE          CREATED       CREATED BY                                      SIZE      COMMENT
 e872741f236e   6 days ago    /bin/sh -c apt-get install -y python            36.4MB    
 22d14bd65edf   6 days ago    /bin/sh -c apt-get update                       29.3MB    
@@ -1205,7 +1208,7 @@ e872741f236e   6 days ago    /bin/sh -c apt-get install -y python            36.
 <missing>      3 weeks ago   /bin/sh -c #(nop) ADD file:920cf788d1ba88f76…   72.7MB  
 
 
-carlos:~/environment/Docker/imagen_python (main) $ docker build -t imagen_python:v1 .
+➜  Dockerfile_1 git:(main) ✗  $ docker build -t imagen_python:v1 .
 
 carlos:~/environment/Docker/imagen_python (main) $ docker images
 REPOSITORY      TAG       IMAGE ID       CREATED         SIZE
@@ -1215,7 +1218,7 @@ mi_ubuntu       latest    3587aedb13bc   6 days ago      110MB
 ubuntu          latest    9873176a8ff5   3 weeks ago     72.7MB
 
 
-carlos:~/environment/Docker/imagen_python (main) $ docker run -it --rm imagen_python:v1 bash
+➜  Dockerfile_1 git:(main)  docker run -it --rm imagen_python:v1 bash
 root@15a4ffaa64b9:/# ls
 bin  boot  dev  etc  home  lib  lib32  lib64  libx32  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
 
@@ -1233,6 +1236,8 @@ usage: git [--version] [--help] [-C <path>] [-c <name>=<value>]
 
 72. CMD
 
+CMD permite indicar el comando por defecto del contenedor
+DEntro de un docker file solo puede haber un CMD
 # Dockerfile
 FROM ubuntu
 RUN apt-get update
@@ -1241,7 +1246,7 @@ RUN echo 1.0 >> /etc/version && apt-get install -y git \
     && apt-get install -y iputils-ping
 CMD echo "Welcome to this container"
 
-carlos:~/environment/Docker/imagen_python (main) $ docker build -t image:v1 .
+➜  Dockerfile_2 git:(main) $ docker build -t image:v1 .
 
 carlos:~/environment/Docker/imagen_python (main) $  docker images
 REPOSITORY      TAG       IMAGE ID       CREATED          SIZE
@@ -1251,7 +1256,7 @@ imagen_python   latest    e872741f236e   7 days ago       138MB
 mi_ubuntu       latest    3587aedb13bc   7 days ago       110MB
 ubuntu          latest    9873176a8ff5   3 weeks ago      72.7MB
 
-carlos:~/environment/Docker/imagen_python (main) $ docker run -it --rm image:v1                                                                                                                         
+➜  Dockerfile_2 git:(main) $ docker run -it --rm image:v1                                                                                                                         
 Welcome to this container
 
 carlos:~/environment/Docker/imagen_python (main) $ docker rmi image:v1
@@ -1357,6 +1362,7 @@ ENTRYPOINT ["df"]
 
 carlos:~/environment/Docker/imagen_python (main) $ docker build -t image:v1 .
 
+# Puede agregar comandos
 carlos:~/environment/Docker/imagen_python (main) $ docker run -it --rm image:v1 -h                                                                                                                      
 Filesystem      Size  Used Avail Use% Mounted on
 overlay          30G  6.5G   23G  23% /
@@ -1367,6 +1373,22 @@ shm              64M     0   64M   0% /dev/shm
 tmpfs           490M     0  490M   0% /proc/acpi
 tmpfs           490M     0  490M   0% /proc/scsi
 tmpfs           490M     0  490M   0% /sys/firmware
+
+# Dockerfile
+FROM ubuntu
+RUN apt-get update
+RUN apt-get install -y python
+RUN echo 1.0 >> /etc/version && apt-get install -y git \
+    && apt-get install -y iputils-ping
+ENTRYPOINT ["/bin/bash"]
+
+➜  Dockerfile_3 git:(main) ✗ docker build -t image:v2 .  
+
+➜  Dockerfile_3 git:(main) ✗ docker run -it --rm image:v2      
+root@a5e5ff708f30:/# 
+
+➜  Dockerfile_3 git:(main) ✗ docker run -it --rm image:v2 df -h
+/usr/bin/df: /usr/bin/df: cannot execute binary file
 
 
 74. WORKDIR
