@@ -1393,6 +1393,7 @@ root@a5e5ff708f30:/#
 
 74. WORKDIR
 
+# WORKDIR permite ejecutar comandos en el directorio deseado dentro de WORKDIR
 # Dockerfile
 FROM ubuntu
 RUN apt-get update
@@ -1407,7 +1408,7 @@ WORKDIR /datos1
 RUN touch f2.txt
 ENTRYPOINT ["/bin/bash"]
 
-carlos:~/environment/Docker/imagen_python (main) $ docker build -t image:v3 .
+➜  Dockerfile_4 git:(main) ✗ docker build -t image:v3 .
 carlos:~/environment/Docker/imagen_python (main) $ docker run -it --rm image:v3
 root@6f6b5a7c91e0:/datos1# 
 
@@ -1436,7 +1437,7 @@ COPY app.log /datos
 ##ENTRYPOINT##
 ENTRYPOINT ["/bin/bash"]
 
-carlos:~/environment/Docker/imagen_python (main) $ docker build -t image:v4 .
+➜  Dockerfile_5 git:(main) ✗ docker build -t image:v4 .
 carlos:~/environment/Docker/imagen_python (main) $ docker run -it --rm image:v4
 
 carlos:~/environment/Docker/imagen_python (main) $ docker run -it --rm image:v4
